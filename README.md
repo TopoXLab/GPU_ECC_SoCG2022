@@ -1,6 +1,8 @@
 # GPU ECC
 Authors: Fan Wang, Hubert Wagner, Chao Chen <br/>
-Maintainer: Fan Wang
+Maintainer: Fan Wang <br/>
+Paper: [GPU Computation of the Euler Characteristic Curve for Imaging Data](https://arxiv.org/pdf/2203.09087.pdf)
+
 ## Introduction ##
 GPU ECC is an optimized GPU implementation of the Euler Characteristic Curve computation for 2D and 3D grayscale images.
 
