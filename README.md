@@ -13,7 +13,7 @@ Arguments:
 --mode:         GPU ECC can compute for a single file or a batch of files. Use 's' for single mode or 'b' for batch mode.
 --input_name:   Path to a single file in single mode or a directory containing files in batch mode.
 --output_name:  Path to a single flie in single mode or a directory in batch mode. In case of batch mode, the output file 
-                  will have the same name as input file.
+                will have the same name as input file.
 --height:       Height of the input file. In case of batch mode, same height is assumed for every file under the directory.
 --width:        Width of the input file. In case of batch mode, same width is assumed for every file under the directory.
 --depth:        Depth of the input file. In case of 2D file, set depth to 0.
