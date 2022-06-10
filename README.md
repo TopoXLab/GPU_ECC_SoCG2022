@@ -8,7 +8,7 @@ GPU ECC is an optimized GPU implementation of the Euler Characteristic Curve com
 ## Run from command line ##
 To run GPU ECC from command line, go into the folder where the executable is located and type: <br/>
 `GPU_ECC.exe [mode] [input_name] [output_name] [height] [width] [depth]` <br/>
-Arguments:<br/>
+Arguments:
 <pre>
 * --mode:       GPU ECC can compute for a single file or a batch of files. Use 's' for single mode or 'b' for batch mode.
 * --input_name: Path to a single file in single mode or a directory containing files in batch mode.
