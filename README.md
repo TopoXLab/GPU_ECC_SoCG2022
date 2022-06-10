@@ -25,7 +25,7 @@ Skip this part if you are familiar with using CMake for compilation. <br/>
 <details>
   <summary>3. Missing dependencies</summary>
   <p>Make sure to check box "Grouped" and "Advanced" in CMake-GUI. If one or more of the dependencies are not installed at the default locations and cannot be found by CMake, you need to tell CMake where to find those dependencies.<br/>
-    - - - -
+- - - -
     1. OpenCV: expand "Ungrouped Entries" and set "OpenCV_DIR" as the directory where you installed/compiled your openCV binaries. An example would be "D:/opencv/build/x64/vc14/lib"
   </p>
 </details>
