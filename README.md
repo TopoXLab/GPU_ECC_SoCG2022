@@ -15,8 +15,8 @@ Tools <br/>
 ## How to compile ##
 Please skip this part if you are familiar with using CMake for compilation. <br/>
 <details>
-  <summary>Setup source and destination folder</summary>
-  In CMake-GUI, the folder where you downloaded the source files will be the source folder. Create a folder named build as the desination folder.
+  <summary>1. Setup source and destination folder</summary>
+  In CMake-GUI, the folder where you downloaded the source files will be the "source" folder. Create a folder named "build" as the desination folder where the compiled   binaries will be stored.
 </details>
 
 ## Run from command line ##
