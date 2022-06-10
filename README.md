@@ -16,7 +16,7 @@ Tools <br/>
 Please skip this part if you are familiar with using CMake for compilation. <br/>
 <details>
   <summary>1. Setup source and destination folder</summary>
-  In CMake-GUI, the folder where you downloaded the source files will be the "source" folder. Create a folder named "build" as the desination folder where the compiled   binaries will be saved.
+  <p>In CMake-GUI, the folder where you downloaded the source files will be the "source" folder. Create a folder named "build" as the desination folder where the compiled binaries will be saved.</p>
   <summary>2. Specify compiler</summary>
   Choose Visual Studio 16 2019 as the compiler. Other compilers are not tested.
 </details>
