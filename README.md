@@ -13,7 +13,7 @@ Tools <br/>
 * Microsoft Visual Studio 2019: [link](https://visualstudio.microsoft.com/vs/older-downloads/)
 
 ## How to compile ##
-Please skip this part if you are familiar with using CMake for compilation. <br/>
+Skip this part if you are familiar with using CMake for compilation. <br/>
 <details>
   <summary>1. Setup source and destination folder</summary>
   <p>In CMake-GUI, the folder where you downloaded the source files will be the "source" folder. Create a folder named "build" as the desination folder where the compiled binaries will be saved.</p>
@@ -21,6 +21,14 @@ Please skip this part if you are familiar with using CMake for compilation. <br/
 <details>
   <summary>2. Specify compiler</summary>
   <p>Choose Visual Studio 16 2019 as the compiler. Other compilers are not tested.</p>
+</details>
+<details>
+  <summary>3. Missing dependencies</summary>
+  <p>
+    Make sure to check box "Grouped" and "Advanced" in CMake-GUI. If one or more of the dependencies are not installed at the default locations and cannot be found by CMake, you need to tell CMake where to find those dependencies.<br/>
+    1. dsf
+    2. sdf
+  </p>
 </details>
 
 ## Run from command line ##
