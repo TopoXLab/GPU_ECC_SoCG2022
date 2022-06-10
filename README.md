@@ -7,7 +7,7 @@ GPU ECC is an optimized GPU implementation of the Euler Characteristic Curve com
 ## Installation ##
 GPU ECC is tested under Windows only at the moment. We plan for a Linux version in the near future. <br/>
 Dependencies <br/>
-* 
+* boost
 Tools <br/>
 * CMake 3.14 or above: [link](https://cmake.org/download/)
 * Microsoft Visual Studio 2019: [link](https://visualstudio.microsoft.com/vs/older-downloads/)
@@ -16,7 +16,7 @@ Tools <br/>
 Please skip this part if you are familiar with using CMake for compilation. <br/>
 <details>
   <summary>Setup source and destination folder</summary>
-  blabla
+  In CMake-GUI, the folder where you downloaded the source files will be the source folder. Create a folder named build as the desination folder.
 </details>
 
 ## Run from command line ##
