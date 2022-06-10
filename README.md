@@ -8,10 +8,16 @@ GPU ECC is an optimized GPU implementation of the Euler Characteristic Curve com
 GPU ECC is tested under Windows only at the moment. We plan for a Linux version in the near future.
 
 Dependencies <br/>
-* boost
+* CUDA 11.6 and above: [link](https://developer.nvidia.com/cuda-11-6-1-download-archive)
+* OpenMP 2.0
+* OpenCV 3.3: [link](https://opencv.org/opencv-3-3/)
+* Boost 1.77.0: [link](https://www.boost.org/users/history/version_1_77_0.html)
+
 Tools <br/>
 * CMake 3.14 or above: [link](https://cmake.org/download/)
 * Microsoft Visual Studio 2019: [link](https://visualstudio.microsoft.com/vs/older-downloads/)
+
+For OpenCV, you can simply download the binaries. GPU ECC only needs "opencv_world330.lib". However, you might need to compile your own binaries for boost 1.77.0. ECC GPU requires a static boost library compiled with multi-thread(MT) for x64 named "libboost_filesystem-vc142-mt-s-x64-1_77.lib".
 
 ## How to compile ##
 Skip this part if you are familiar with using CMake for compilation. <br/>
