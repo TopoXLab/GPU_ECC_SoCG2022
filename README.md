@@ -5,7 +5,8 @@ Maintainer: Fan Wang
 GPU ECC is an optimized GPU implementation of the Euler Characteristic Curve computation for 2D and 3D grayscale images.
 
 ## Installation ##
-GPU ECC is tested under Windows only at the moment. We plan for a Linux version in the near future. <br/>
+GPU ECC is tested under Windows only at the moment. We plan for a Linux version in the near future.
+
 Dependencies <br/>
 * boost
 Tools <br/>
@@ -26,10 +27,19 @@ Skip this part if you are familiar with using CMake for compilation. <br/>
   <summary>3. Missing dependencies</summary>
   <p>Make sure to check box "Grouped" and "Advanced" in CMake-GUI. If one or more of the dependencies are not installed at the default locations and cannot be found by CMake, you need to tell CMake where to find those dependencies.
     
-    1. OpenCV: expand "Ungrouped Entries" and set "OpenCV_DIR" as the directory where you installed/compiled
-    your openCV binaries. An example would be "D:/opencv/build/x64/vc14/lib". Click "Configure" in CMake-GUI.
-    2. Boost: 
+    1. OpenCV: expand "Ungrouped Entries" and set "OpenCV_DIR" as the directory where you installed/compiled your openCV
+    binaries. An example would be "D:/opencv/build/x64/vc14/lib". Click "Configure" in CMake-GUI.
+    2. Boost: expand "Boost" and set both "Boost_DIR" and "Boost_INCLUDE_DIR" as the root folder of boost (e.g. D:/boost_1_77_0).
+    Set "Boost_FILESYSTEM_LIBRARY_DEBUG" and "Boost_FILESYSTEM_LIBRARY_RELEASE" as the folder where you built your own boost
+    binaries (e.g. D:/boost_1_77_0/lib64-msvc-14.2). Press "Configure" button. In some versions of CMake, another Boost entry
+    will appear, expand it and make sure to set "Boost_LIBRARY_DIR_DEBUG" and "Boost_LIBRARY_DIR_DEBUG" with the same folder
+    you used earlier for "Boost_FILESYSTEM_LIBRARY_DEBUG" and "Boost_FILESYSTEM_LIBRARY_RELEASE". Once all the errors go away,
+    press "Generate".
   </p>
+</details>
+<details>
+  <summary>4. Build GPU ECC with Visual Studio</summary>
+  <p>Locate file "GPU_ECC.sln" under the "build" folder and open it with MSVC. Swith to "Release" mode and build the solution.</p>
 </details>
 
 ## Run from command line ##
