@@ -18,3 +18,5 @@ Arguments:
 --width:        Width of the input file. In case of batch mode, same width is assumed for every file under the directory.
 --depth:        Depth of the input file. In case of 2D file, set depth to 0.
 </pre>
+An example command: <br/>
+`GPU_ECC.exe b C:/input_directory C:/output_directory 256 256 0` <br/>
