@@ -7,7 +7,9 @@ GPU ECC is an optimized GPU implementation of the Euler Characteristic Curve com
 ## Installation ##
 GPU ECC is tested under Windows only at the moment. We plan for a Linux version in the near future.
 Dependencies
-* CMake 3.14 or above: [link](https://cmake.org/download/ "Named link title")
+Tools
+* CMake 3.14 or above: [link](https://cmake.org/download/)
+* Microsoft Visual Studio 2019: [link](https://visualstudio.microsoft.com/vs/older-downloads/)
 
 ## Run from command line ##
 To run GPU ECC from command line, go into the folder where the executable is located and type: <br/>
