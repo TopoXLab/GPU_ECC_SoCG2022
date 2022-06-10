@@ -5,9 +5,9 @@ Maintainer: Fan Wang
 GPU ECC is an optimized GPU implementation of the Euler Characteristic Curve computation for 2D and 3D grayscale images.
 
 ## Installation ##
-GPU ECC is tested under Windows only at the moment. We plan for a Linux version in the near future.
-Dependencies
-Tools
+GPU ECC is tested under Windows only at the moment. We plan for a Linux version in the near future. <br/>
+Dependencies <br/>
+Tools <br/>
 * CMake 3.14 or above: [link](https://cmake.org/download/)
 * Microsoft Visual Studio 2019: [link](https://visualstudio.microsoft.com/vs/older-downloads/)
 
