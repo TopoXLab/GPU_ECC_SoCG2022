@@ -835,3 +835,15 @@ std::vector<float> from_stream_2Dfloat_mt_row_(
 	time += (w2 * 1000 - w1 * 1000);
 	return ascend_unique_arr_local;
 }
+
+template<typename input_elem_t>
+void write_txt_ECC(const std::string filename_o, std::vector<input_elem_t>& ascend_unique_arr, int* VCEC_host) {
+	std::fstream out(filename_o, std::fstream::out);
+	long long int accum = 0;
+	for (unsigned int i = 0; i < ascend_unique_arr.size(); i++) {
+		if (VCEC_host[i] == 0) continue;
+		out << ascend_unique_arr[i] << " " << accum + VCEC_host[i] << std::endl;
+		accum += VCEC_host[i];
+	}
+	out.close();
+}

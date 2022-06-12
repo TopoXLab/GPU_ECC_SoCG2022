@@ -210,8 +210,33 @@ std::vector<std::string> fileNames_from_folder(std::string& path) {
 	for (auto& entry : boost::make_iterator_range(
 		boost::filesystem::directory_iterator(path), {})) {
 		std::string t = entry.path().string();
-		std::string postfix = t.substr(t.find('.') + 1, t.length());
-		if (postfix != std::string("txt")) res.push_back(t);
+		std::string postfix = t.substr(t.find_last_of('.') + 1);
+		if (postfix == std::string("dat")) res.push_back(t);
 	}
 	return res;
+}
+
+std::vector<std::string> compose_outfileNames_from_folder(std::string& path, std::string& patho) {
+	if (!boost::filesystem::exists(path)) { std::cout << "Invalid folder path" << std::endl; exit(1); }
+	std::vector<std::string> res;
+	for (auto& entry : boost::make_iterator_range(
+		boost::filesystem::directory_iterator(path), {})) {
+		std::string t = entry.path().string();
+		std::string n = t.substr(t.find_last_of("/\\") + 1);
+		n = n.substr(0, n.find_last_of(".")) + ".txt";
+		std::string o = (patho[patho.length() - 1] == '/' || patho[patho.length() - 1] == '\\') ? patho + n : patho + "/" + n;
+		res.push_back(o);
+	}
+	return res;
+}
+
+int decide_chunk_num(const int h, const int w, const int d) {
+	/*
+		Decide chunk number
+		@h: height of the input data
+		@w: width of the input data
+		@d: depth of the input data
+	*/
+	if (d > 0) return int(std::sqrt(d));
+	else return int(std::sqrt(h));
 }
