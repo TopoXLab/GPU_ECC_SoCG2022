@@ -1,6 +1,8 @@
 # GPU ECC
 Authors: Fan Wang, Hubert Wagner, Chao Chen <br/>
-Maintainer: Fan Wang
+Maintainer: Fan Wang <br/>
+Paper: [GPU Computation of the Euler Characteristic Curve for Imaging Data](https://arxiv.org/pdf/2203.09087.pdf)
+
 ## Introduction ##
 GPU ECC is an optimized GPU implementation of the Euler Characteristic Curve computation for 2D and 3D grayscale images.
 
@@ -63,3 +65,14 @@ Arguments:
 </pre>
 An example command: <br/>
 `GPU_ECC.exe b C:/input_directory C:/output_directory 256 256 0` <br/>
+
+## Inputs ##
+GPU ECC accepts files with floating numbers in binary form. We use the following code snippet to write data:
+```
+std::ofstream wstream(filename.c_str(), std::ios::out | std::ios::binary);
+for (size_t i = 0; i < size; i++) { float o = (float)data[i]; wstream.write((char*)&o, sizeof(float)); }
+wstream.close();
+```
+Some examples are provided under folder "GaussRandomField". To run these examples, use command:<br/>
+`GPU_ECC.exe s ./GaussRandomField/2D/2D_32_0.dat ../output/2D_32_0.txt 32 32 0` <br/>
+`GPU_ECC.exe s ./GaussRandomField/3D/3D_32_0.dat ../output/3D_32_0.txt 32 32 32` <br/>
