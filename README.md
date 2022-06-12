@@ -67,12 +67,12 @@ An example command: <br/>
 `GPU_ECC.exe b C:/input_directory C:/output_directory 256 256 0` <br/>
 
 ## Inputs ##
-GPU ECC accepts files with floating numbers in binary form. We use the following code snippet to write data:
+GPU ECC accepts files with floating numbers in binary form. The filename extension should be .dat. We use the following code snippet to write data:
 ```
 std::ofstream wstream(filename.c_str(), std::ios::out | std::ios::binary);
 for (size_t i = 0; i < size; i++) { float o = (float)data[i]; wstream.write((char*)&o, sizeof(float)); }
 wstream.close();
 ```
 Some examples are provided under folder "GaussRandomField". To run these examples, use command:<br/>
-`GPU_ECC.exe s ./GaussRandomField/2D/2D_32_0.dat ../output/2D_32_0.txt 32 32 0` <br/>
-`GPU_ECC.exe s ./GaussRandomField/3D/3D_32_0.dat ../output/3D_32_0.txt 32 32 32` <br/>
+`GPU_ECC.exe s ./GaussRandomField/2D/2D_128_0.dat ../output/2D_128_0.txt 128 128 0` <br/>
+`GPU_ECC.exe b ./GaussRandomField/3D ../output 128 128 128` <br/>
