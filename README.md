@@ -19,7 +19,7 @@ Tools <br/>
 * CMake 3.14 or above: [link](https://cmake.org/download/)
 * Microsoft Visual Studio 2019: [link](https://visualstudio.microsoft.com/vs/older-downloads/)
 
-For OpenCV, you can simply download the binaries. GPU ECC only needs "opencv_world330.lib". However, you might need to compile your own binaries for boost 1.77.0. ECC GPU requires a static boost library compiled with multi-thread(MT) for x64 named "libboost_filesystem-vc142-mt-s-x64-1_77.lib".
+For OpenCV, you can simply download the binaries. GPU ECC only needs "opencv_world330.lib". However, you need to compile your own binaries for boost 1.77.0. ECC GPU requires a static boost library compiled with multi-thread(MT) for x64 named "libboost_filesystem-vc142-mt-s-x64-1_77.lib".
 
 ## How to compile ##
 Skip this part if you are familiar with using CMake for compilation. <br/>
@@ -78,3 +78,10 @@ Some examples are provided under folder "GaussRandomField". To run these example
 `GPU_ECC.exe b ./GaussRandomField/3D ../output 128 128 128` <br/>
 
 ECC GPU writes the ECC results into .txt files.
+
+## Compile boost for GPU ECC ##
+Download boost_1.77.0.zip and unzip it. Run following commands under root folder:<br/>
+`D:\boost_1_77_0>bootstrap.bat` <br/>
+`D:\boost_1_77_0>b2 --build-dir=build\x64 address-model=64 threading=multi --stagedir=.\bin\x64 --toolset=msvc -j 8 link=static,shared runtime-link=static,shared --variant=debug,release` <br/>
+After compilation, the library we need is located under boost_1_77_0/build/x64/boost/bin.v2/libs/filesystem/build/msvc-14.2/release/link-static/runtime-link-static/threading-multi/libboost_filesystem-vc142-mt-s-x64-1_77.lib <br/>
+This [page](https://levelup.gitconnected.com/the-definite-guide-on-compiling-and-linking-boost-c-libraries-for-visual-studio-projects-c79464d7282d) provides detailed instructions for compling boost under Windows.
