@@ -68,6 +68,8 @@ Arguments:
 An example command: <br/>
 `GPU_ECC.exe b1 C:/input_directory C:/output_directory 256 256 0` <br/>
 
+ GPU ECC has two batch modes: b1 and b2. b1 spends all GPU resources on a single file one by one. b2 distribute GPU resources across several files at the same time. b1 is recommended for large files while b2 is much faster for a large number of small files.
+
 ## Inputs/Outputs ##
 GPU ECC accepts files with floating numbers in binary form. The filename extension should be .dat. We use the following code snippet to write data that is used as test inputs for GPU ECC:
 ```
