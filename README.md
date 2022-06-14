@@ -56,7 +56,7 @@ To run GPU ECC from command line, go into the folder where the executable is loc
 Arguments:
 <pre>
 --mode:         GPU ECC can compute for a single file or for a batch of files. Use 's' for single mode or 'b1/b2' for batch mode.
-  	    --b1:   spend all gpu resources on a single file one by one, good for large files
+        --b1:   spend all gpu resources on a single file one by one, good for large files
         --b2:   distribute gpu resources across several files, good for large number of small files
 --input_name:   Path to a single file in single mode or a directory containing files in batch mode.
 --output_name:  Path to a single flie in single mode or a directory in batch mode. In case of batch mode, the output file 
