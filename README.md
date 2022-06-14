@@ -55,7 +55,9 @@ To run GPU ECC from command line, go into the folder where the executable is loc
 `GPU_ECC.exe [mode] [input_name] [output_name] [height] [width] [depth]` <br/>
 Arguments:
 <pre>
---mode:         GPU ECC can compute for a single file or a batch of files. Use 's' for single mode or 'b' for batch mode.
+--mode:         GPU ECC can compute for a single file or for a batch of files. Use 's' for single mode or 'b1/b2' for batch mode.
+  	    --b1:   spend all gpu resources on a single file one by one, good for large files
+        --b2:   distribute gpu resources across several files, good for large number of small files
 --input_name:   Path to a single file in single mode or a directory containing files in batch mode.
 --output_name:  Path to a single flie in single mode or a directory in batch mode. In case of batch mode, the output file 
                 will have the same name as input file.
@@ -64,18 +66,18 @@ Arguments:
 --depth:        Depth of the input file. In case of 2D file, set depth to 0.
 </pre>
 An example command: <br/>
-`GPU_ECC.exe b C:/input_directory C:/output_directory 256 256 0` <br/>
+`GPU_ECC.exe b1 C:/input_directory C:/output_directory 256 256 0` <br/>
 
 ## Inputs/Outputs ##
-GPU ECC accepts files with floating numbers in binary form. The filename extension should be .dat. We use the following code snippet to write data:
+GPU ECC accepts files with floating numbers in binary form. The filename extension should be .dat. We use the following code snippet to write data that is used as test inputs for GPU ECC:
 ```
 std::ofstream wstream(filename.c_str(), std::ios::out | std::ios::binary);
 for (size_t i = 0; i < size; i++) { float o = (float)data[i]; wstream.write((char*)&o, sizeof(float)); }
 wstream.close();
 ```
-Some examples are provided under folder "GaussRandomField". To run these examples, use command:<br/>
+Some examples are provided under folder "GaussRandomField". To run these examples, use examplar commands:<br/>
 `GPU_ECC.exe s ./GaussRandomField/2D/2D_128_0.dat ../output/2D_128_0.txt 128 128 0` <br/>
-`GPU_ECC.exe b ./GaussRandomField/3D ../output 128 128 128` <br/>
+`GPU_ECC.exe b2 ./GaussRandomField/3D ../output 128 128 128` <br/>
 
 ECC GPU writes the ECC results into .txt files.
 
