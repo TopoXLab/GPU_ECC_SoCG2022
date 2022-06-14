@@ -19,8 +19,10 @@
 void helper_() {
 	std::cout << "Invalid arguments" << std::endl;
 	std::cout << "============================================================" << std::endl;
-	std::cout << "Usage: ECC_GPU.exe [mode] [input] [output] [height] [width] [depth]" << std::endl;
-	std::cout << "--mode:   b for batch mode, s for single mode" << std::endl;
+	std::cout << "Usage: GPU_ECC.exe [mode] [input] [output] [height] [width] [depth]" << std::endl;
+	std::cout << "--mode:   b1/b2 for batch mode, s for single mode" << std::endl;
+	std::cout << "	--b1:   spend all gpu resources on a single file one by one, good for large files" << std::endl;
+	std::cout << "	--b2:   distribute gpu resources across several files, good for large number of small files" << std::endl;
 	std::cout << "--input:  directory for batch mode, file for single mode" << std::endl;
 	std::cout << "--output: directory for batch mode, file for single mode" << std::endl;
 	std::cout << "--height: height of the input file" << std::endl;
@@ -129,7 +131,7 @@ std::vector<double> ECC_(
 				from_stream_2Dfloat_mt_row_<float>(fileName, 8, input_host[engidx], imageH_, imageW_, section[i].first, section[i].second, pad_by_one, timings[0]);
 			binNum_local = int(ascend_unique_arr_local.size());
 			ascend_unique_arr_local_rec.push_back(ascend_unique_arr_local);
-			if (binNum_local > pre_binNum) std::cout << "WARNING: increase bin number" << std::endl;
+			if (binNum_local > pre_binNum) std::cout << "WARNING: increase bin number or chunk number" << std::endl;
 			if (data_3D) { cudaMemcpy3DParms p = setup_3DCopy_params(tex_dataSrc_[engidx], input_host[engidx], imageH_, imageW_, chunkH, 0); checkCudaErrors(cudaMemcpy3D(&p)); }
 			else checkCudaErrors(cudaMemcpyToArray(tex_dataSrc_[engidx], 0, 0, &input_host[engidx][0], chunkH * imageW_ * sizeof(float), cudaMemcpyHostToDevice));
 			std::copy(ascend_unique_arr_local.begin(), ascend_unique_arr_local.end(), ascend_unique_arr_local_host_[engidx]);
@@ -189,7 +191,7 @@ std::vector<double> ECC_(
 	return timings;
 }
 
-std::vector<double> ECC_folder(
+std::vector<double> ECC_folder_sequential(
 	std::string& path,
 	std::string& patho,
 	int h, int w, int d,
@@ -293,7 +295,7 @@ std::vector<double> ECC_folder(
 					from_stream_2Dfloat_mt_row_<float>(fileNames[fidx], 8, input_host[engidx], imageH_, imageW_, section[i].first, section[i].second, pad_by_one, timings[0]);
 				binNum_local = int(ascend_unique_arr_local.size());
 				ascend_unique_arr_local_rec.push_back(ascend_unique_arr_local);
-				if (binNum_local > pre_binNum) std::cout << "WARNING: increase bin number" << std::endl;
+				if (binNum_local > pre_binNum) std::cout << "WARNING: increase bin number or chunk number" << std::endl;
 				if (data_3D) { cudaMemcpy3DParms p = setup_3DCopy_params(tex_dataSrc_[engidx], input_host[engidx], imageH_, imageW_, chunkH, 0); checkCudaErrors(cudaMemcpy3D(&p)); }
 				else checkCudaErrors(cudaMemcpyToArray(tex_dataSrc_[engidx], 0, 0, &input_host[engidx][0], chunkH * imageW_ * sizeof(float), cudaMemcpyHostToDevice));
 				std::copy(ascend_unique_arr_local.begin(), ascend_unique_arr_local.end(), ascend_unique_arr_local_host_[engidx]);
@@ -357,159 +359,159 @@ std::vector<double> ECC_folder(
 	return timings;
 }
 
-//std::vector<double> ECC_folder(
-//	std::string& path,
-//	std::string& patho,
-//	int h, int w, int d,
-//	bool pad,
-//	bool async,
-//	bool mt,
-//	bool timing,
-//	bool verb,
-//	bool output
-//) {
-//	int imageH_ = h;
-//	int imageW_ = w;
-//	int imageD_ = d;
-//	bool pad_by_one = pad;
-//	bool async_mode = async;
-//	bool manual_timing = timing;
-//	bool mt_read = mt;
-//	bool verbose = verb;
-//	bool data_3D = (d > 0);
-//
-//	std::vector<std::string> fileNames = fileNames_from_folder(path);
-//	const int pre_binNum = 1024;
-//	int chunk_num = fileNames.size();
-//	int engine_num = 3;
-//	engine_num = (engine_num > chunk_num) ? chunk_num : engine_num;
-//
-//	// ------ Divide into chunks
-//	std::vector<std::pair<int, int>> section = (data_3D) ? return_equal_size_chunk(imageD_, chunk_num, pad_by_one) : return_equal_size_chunk(imageH_, chunk_num, pad_by_one);
-//
-//	// ------ Timing
-//	std::vector<double> timings(2, 0);
-//	double w1 = get_wall_time();
-//	// ------- Declare data structures -------
-//	float** input_host = allocate_input_memory<float>(engine_num, async_mode, pad_by_one, imageH_, imageW_, imageD_, -1);
-//	cudaArray** tex_dataSrc_ = (data_3D) ? allocate_cudaArray_array_(engine_num, imageH_, imageW_, imageD_) : allocate_cudaArray_array_(engine_num, imageH_, imageW_);
-//	cudaTextureObject_t* texSrc_ = create_cudaTextureObject_array_(tex_dataSrc_, engine_num);
-//	(data_3D) ? setBasicParams_const_(section, imageW_, imageH_) : setBasicParams_const_(section, imageW_);
-//	// ------- VCEC & bin array -------
-//	int binNum_local;
-//	std::vector<std::vector<int>> VCEC_local_rec;
-//	std::vector<std::vector<float>> ascend_unique_arr_local_rec;
-//	int** VCEC_host_partial_ = (async_mode) ? allocate_host_memory2D_pinned_<int>(engine_num, pre_binNum) : allocate_host_memory2D_<int>(engine_num, pre_binNum);
-//	float** ascend_unique_arr_local_host_ = (async_mode) ? allocate_host_memory2D_pinned_<float>(engine_num, pre_binNum) : allocate_host_memory2D_<float>(engine_num, pre_binNum);
-//
-//	int** VCEC_device_partial_ = allocate_device_memory2D_<int>(engine_num, pre_binNum);
-//	float** ascend_unique_arr_local_device_ = allocate_device_memory2D_<float>(engine_num, pre_binNum);
-//
-//	// ----- Allocate and initialize an array of stream handles
-//	cudaEvent_t* events;
-//	cudaStream_t* streams;
-//
-//	// ----- Histogram Initialization -----
-//	if (async_mode) {
-//		events = create_cudaEvent_array(engine_num * 3);
-//		streams = create_cudaStream_array(engine_num);
-//	}
-//
-//	// ------ Memory transfer and kernel launch
-//	for (int i = 0; i < chunk_num; i++) {
-//		int engidx = i % engine_num;
-//		int chunkH = (data_3D) ? imageD_ : imageH_;
-//		std::string fileName = fileNames[i];
-//
-//		if (async_mode) {
-//			checkCudaErrors(cudaEventSynchronize(events[engine_num * 2 + engidx]));
-//			std::vector<float> ascend_unique_arr_local = (data_3D) ?
-//				from_stream_3Dfloat_mt_slice_<float>(fileName, 8, input_host[engidx], imageH_, imageW_, imageD_, 0, imageD_ - 1, pad_by_one, timings[0]) :
-//				from_stream_2Dfloat_mt_row_<float>(fileName, 8, input_host[engidx], imageH_, imageW_, 0, imageH_ - 1, pad_by_one, timings[0]);
-//			binNum_local = int(ascend_unique_arr_local.size());
-//			ascend_unique_arr_local_rec.push_back(ascend_unique_arr_local);
-//			if (binNum_local > pre_binNum) std::cout << "WARNING: increase bin number" << std::endl;
-//			if (data_3D) {
-//				cudaMemcpy3DParms p = setup_3DCopy_params(tex_dataSrc_[engidx], input_host[engidx], imageH_, imageW_, chunkH, 0);
-//				checkCudaErrors(cudaMemcpy3DAsync(&p, streams[engidx]));
-//			}
-//			else checkCudaErrors(cudaMemcpyToArrayAsync(tex_dataSrc_[engidx], 0, 0, &input_host[engidx][0], chunkH * imageW_ * sizeof(float), cudaMemcpyHostToDevice, streams[engidx]));
-//			checkCudaErrors(cudaEventRecord(events[engine_num * 2 + engidx], streams[engidx]));
-//			if (i >= engine_num) checkCudaErrors(cudaEventSynchronize(events[engine_num + engidx]));
-//
-//			std::copy(ascend_unique_arr_local.begin(), ascend_unique_arr_local.end(), ascend_unique_arr_local_host_[engidx]);
-//			checkCudaErrors(cudaMemcpyAsync(ascend_unique_arr_local_device_[engidx], ascend_unique_arr_local_host_[engidx], binNum_local * sizeof(float), cudaMemcpyHostToDevice, streams[engidx]));
-//			checkCudaErrors(cudaEventRecord(events[engine_num + engidx], streams[engidx]));
-//			if (i >= engine_num) {
-//				checkCudaErrors(cudaEventSynchronize(events[engidx]));
-//				std::vector<int> VCEC_local_;
-//				VCEC_local_.assign(VCEC_host_partial_[engidx], VCEC_host_partial_[engidx] + ascend_unique_arr_local_rec[i - engine_num].size());
-//				VCEC_local_rec.push_back(VCEC_local_);
-//			}
-//			init_VCEC_device(binNum_local, VCEC_device_partial_[engidx], &streams[engidx]);
-//			if (data_3D) computeECC_3D(imageH_ - 2, imageW_ - 2, chunkH - 2, binNum_local, texSrc_[engidx], VCEC_device_partial_[engidx], ascend_unique_arr_local_device_[engidx], i == (chunk_num - 1), &streams[engidx]);
-//			else computeECC(chunkH - 2, imageW_ - 2, binNum_local, texSrc_[engidx], VCEC_device_partial_[engidx], ascend_unique_arr_local_device_[engidx], i == (chunk_num - 1), &streams[engidx]);
-//			checkCudaErrors(cudaMemcpyAsync(VCEC_host_partial_[engidx], VCEC_device_partial_[engidx], binNum_local * sizeof(int), cudaMemcpyDeviceToHost, streams[engidx]));
-//			checkCudaErrors(cudaEventRecord(events[engidx], streams[engidx]));
-//		}
-//		else {
-//			std::vector<float> ascend_unique_arr_local = (data_3D) ?
-//				from_stream_3Dfloat_mt_slice_<float>(fileName, 8, input_host[engidx], imageH_, imageW_, imageD_, 0, imageD_ - 1, pad_by_one, timings[0]) :
-//				from_stream_2Dfloat_mt_row_<float>(fileName, 8, input_host[engidx], imageH_, imageW_, 0, imageH_ - 1, pad_by_one, timings[0]);
-//			binNum_local = int(ascend_unique_arr_local.size());
-//			ascend_unique_arr_local_rec.push_back(ascend_unique_arr_local);
-//			if (binNum_local > pre_binNum) std::cout << "WARNING: increase bin number" << std::endl;
-//			if (data_3D) { cudaMemcpy3DParms p = setup_3DCopy_params(tex_dataSrc_[engidx], input_host[engidx], imageH_, imageW_, chunkH, 0); checkCudaErrors(cudaMemcpy3D(&p)); }
-//			else checkCudaErrors(cudaMemcpyToArray(tex_dataSrc_[engidx], 0, 0, &input_host[engidx][0], chunkH * imageW_ * sizeof(float), cudaMemcpyHostToDevice));
-//			std::copy(ascend_unique_arr_local.begin(), ascend_unique_arr_local.end(), ascend_unique_arr_local_host_[engidx]);
-//			checkCudaErrors(cudaMemcpy(ascend_unique_arr_local_device_[engidx], ascend_unique_arr_local_host_[engidx], binNum_local * sizeof(float), cudaMemcpyHostToDevice));
-//			init_histogram_1D_<int>(VCEC_host_partial_[engidx], binNum_local);
-//			checkCudaErrors(cudaMemcpy(VCEC_device_partial_[engidx], VCEC_host_partial_[engidx], binNum_local * sizeof(int), cudaMemcpyHostToDevice));
-//			if (data_3D) computeECC_3D(imageH_ - 2, imageW_ - 2, chunkH - 2, binNum_local, texSrc_[engidx], VCEC_device_partial_[engidx], ascend_unique_arr_local_device_[engidx], i == (chunk_num - 1), nullptr);
-//			else computeECC(chunkH - 2, imageW_ - 2, binNum_local, texSrc_[engidx], VCEC_device_partial_[engidx], ascend_unique_arr_local_device_[engidx], i == (chunk_num - 1), nullptr);
-//			checkCudaErrors(cudaMemcpy(VCEC_host_partial_[engidx], VCEC_device_partial_[engidx], binNum_local * sizeof(int), cudaMemcpyDeviceToHost));
-//			std::vector<int> VCEC_local_;
-//			VCEC_local_.assign(VCEC_host_partial_[engidx], VCEC_host_partial_[engidx] + binNum_local);
-//			VCEC_local_rec.push_back(VCEC_local_);
-//		}
-//	}
-//	// ------- Process results --------
-//	if (async_mode) for (int i = chunk_num; i < chunk_num + engine_num; i++) {
-//		checkCudaErrors(cudaEventSynchronize(events[i % engine_num]));
-//		std::vector<int> VCEC_local_;
-//		VCEC_local_.assign(VCEC_host_partial_[i % engine_num], VCEC_host_partial_[i % engine_num] + ascend_unique_arr_local_rec[i - engine_num].size());
-//		VCEC_local_rec.push_back(VCEC_local_);
-//	}
-//
-//	checkCudaErrors(cudaDeviceSynchronize());
-//	double w2 = get_wall_time();
-//	timings[1] = (w2 * 1000 - w1 * 1000);
-//	if (output) {
-//		std::vector<std::string> fileNameso = compose_outfileNames_from_folder(path, patho);
-//		for (unsigned int i = 0; i < fileNameso.size(); i++) write_txt_ECC<float>(fileNameso[i], ascend_unique_arr_local_rec[i], &VCEC_local_rec[i][0]);
-//	}
-//	if (manual_timing) {
-//		printf("Data read time: %f msecs;\n", timings[0]);
-//		printf("GPU total time: %f msecs;\n", timings[1]);
-//	}
-//
-//	// ------- Free memory --------
-//	section.clear();
-//	free_vector2D_<float>(ascend_unique_arr_local_rec);
-//	(async_mode) ? cudaFreeHost(input_host) : free(input_host);
-//	(async_mode) ? free_host_memory2D_pinned_<float>(input_host, engine_num) : free_host_memory2D_<float>(input_host, engine_num);
-//	(async_mode) ? free_host_memory2D_pinned_<int>(VCEC_host_partial_, engine_num) : free_host_memory2D_<int>(VCEC_host_partial_, engine_num);
-//	(async_mode) ? free_host_memory2D_pinned_<float>(ascend_unique_arr_local_host_, engine_num) : free_host_memory2D_<float>(ascend_unique_arr_local_host_, engine_num);
-//
-//	free_device_memory2D_<int>(VCEC_device_partial_, engine_num);
-//	free_cudaArray_array(tex_dataSrc_, engine_num);
-//	free_device_memory2D_<float>(ascend_unique_arr_local_device_, engine_num);
-//	if (async_mode) free_cudaEvent_array(events, engine_num * 3);
-//	if (async_mode) free_cudaStream_array(streams, engine_num);
-//
-//	checkCudaErrors(cudaDeviceReset());
-//	return timings;
-//}
+std::vector<double> ECC_folder_multiple(
+	std::string& path,
+	std::string& patho,
+	int h, int w, int d,
+	bool pad,
+	bool async,
+	bool mt,
+	bool timing,
+	bool verb,
+	bool output
+) {
+	int imageH_ = h;
+	int imageW_ = w;
+	int imageD_ = d;
+	bool pad_by_one = pad;
+	bool async_mode = async;
+	bool manual_timing = timing;
+	bool mt_read = mt;
+	bool verbose = verb;
+	bool data_3D = (d > 0);
+
+	std::vector<std::string> fileNames = fileNames_from_folder(path);
+	const int pre_binNum = 1024;
+	int chunk_num = fileNames.size();
+	int engine_num = 3;
+	engine_num = (engine_num > chunk_num) ? chunk_num : engine_num;
+
+	// ------ Divide into chunks
+	std::vector<std::pair<int, int>> section = (data_3D) ? return_equal_size_chunk(imageD_, chunk_num, pad_by_one) : return_equal_size_chunk(imageH_, chunk_num, pad_by_one);
+
+	// ------ Timing
+	std::vector<double> timings(2, 0);
+	double w1 = get_wall_time();
+	// ------- Declare data structures -------
+	float** input_host = allocate_input_memory<float>(engine_num, async_mode, pad_by_one, imageH_, imageW_, imageD_, -1);
+	cudaArray** tex_dataSrc_ = (data_3D) ? allocate_cudaArray_array_(engine_num, imageH_, imageW_, imageD_) : allocate_cudaArray_array_(engine_num, imageH_, imageW_);
+	cudaTextureObject_t* texSrc_ = create_cudaTextureObject_array_(tex_dataSrc_, engine_num);
+	(data_3D) ? setBasicParams_const_(section, imageW_, imageH_) : setBasicParams_const_(section, imageW_);
+	// ------- VCEC & bin array -------
+	int binNum_local;
+	std::vector<std::vector<int>> VCEC_local_rec;
+	std::vector<std::vector<float>> ascend_unique_arr_local_rec;
+	int** VCEC_host_partial_ = (async_mode) ? allocate_host_memory2D_pinned_<int>(engine_num, pre_binNum) : allocate_host_memory2D_<int>(engine_num, pre_binNum);
+	float** ascend_unique_arr_local_host_ = (async_mode) ? allocate_host_memory2D_pinned_<float>(engine_num, pre_binNum) : allocate_host_memory2D_<float>(engine_num, pre_binNum);
+
+	int** VCEC_device_partial_ = allocate_device_memory2D_<int>(engine_num, pre_binNum);
+	float** ascend_unique_arr_local_device_ = allocate_device_memory2D_<float>(engine_num, pre_binNum);
+
+	// ----- Allocate and initialize an array of stream handles
+	cudaEvent_t* events;
+	cudaStream_t* streams;
+
+	// ----- Histogram Initialization -----
+	if (async_mode) {
+		events = create_cudaEvent_array(engine_num * 3);
+		streams = create_cudaStream_array(engine_num);
+	}
+
+	// ------ Memory transfer and kernel launch
+	for (int i = 0; i < chunk_num; i++) {
+		int engidx = i % engine_num;
+		int chunkH = (data_3D) ? imageD_ : imageH_;
+		std::string fileName = fileNames[i];
+
+		if (async_mode) {
+			checkCudaErrors(cudaEventSynchronize(events[engine_num * 2 + engidx]));
+			std::vector<float> ascend_unique_arr_local = (data_3D) ?
+				from_stream_3Dfloat_mt_slice_<float>(fileName, 8, input_host[engidx], imageH_, imageW_, imageD_, 0, imageD_ - 1, pad_by_one, timings[0]) :
+				from_stream_2Dfloat_mt_row_<float>(fileName, 8, input_host[engidx], imageH_, imageW_, 0, imageH_ - 1, pad_by_one, timings[0]);
+			binNum_local = int(ascend_unique_arr_local.size());
+			ascend_unique_arr_local_rec.push_back(ascend_unique_arr_local);
+			if (binNum_local > pre_binNum) std::cout << "WARNING: increase bin number or chunk number" << std::endl;
+			if (data_3D) {
+				cudaMemcpy3DParms p = setup_3DCopy_params(tex_dataSrc_[engidx], input_host[engidx], imageH_, imageW_, chunkH, 0);
+				checkCudaErrors(cudaMemcpy3DAsync(&p, streams[engidx]));
+			}
+			else checkCudaErrors(cudaMemcpyToArrayAsync(tex_dataSrc_[engidx], 0, 0, &input_host[engidx][0], chunkH * imageW_ * sizeof(float), cudaMemcpyHostToDevice, streams[engidx]));
+			checkCudaErrors(cudaEventRecord(events[engine_num * 2 + engidx], streams[engidx]));
+			if (i >= engine_num) checkCudaErrors(cudaEventSynchronize(events[engine_num + engidx]));
+
+			std::copy(ascend_unique_arr_local.begin(), ascend_unique_arr_local.end(), ascend_unique_arr_local_host_[engidx]);
+			checkCudaErrors(cudaMemcpyAsync(ascend_unique_arr_local_device_[engidx], ascend_unique_arr_local_host_[engidx], binNum_local * sizeof(float), cudaMemcpyHostToDevice, streams[engidx]));
+			checkCudaErrors(cudaEventRecord(events[engine_num + engidx], streams[engidx]));
+			if (i >= engine_num) {
+				checkCudaErrors(cudaEventSynchronize(events[engidx]));
+				std::vector<int> VCEC_local_;
+				VCEC_local_.assign(VCEC_host_partial_[engidx], VCEC_host_partial_[engidx] + ascend_unique_arr_local_rec[i - engine_num].size());
+				VCEC_local_rec.push_back(VCEC_local_);
+			}
+			init_VCEC_device(binNum_local, VCEC_device_partial_[engidx], &streams[engidx]);
+			if (data_3D) computeECC_3D(imageH_ - 2, imageW_ - 2, chunkH - 2, binNum_local, texSrc_[engidx], VCEC_device_partial_[engidx], ascend_unique_arr_local_device_[engidx], i == (chunk_num - 1), &streams[engidx]);
+			else computeECC(chunkH - 2, imageW_ - 2, binNum_local, texSrc_[engidx], VCEC_device_partial_[engidx], ascend_unique_arr_local_device_[engidx], i == (chunk_num - 1), &streams[engidx]);
+			checkCudaErrors(cudaMemcpyAsync(VCEC_host_partial_[engidx], VCEC_device_partial_[engidx], binNum_local * sizeof(int), cudaMemcpyDeviceToHost, streams[engidx]));
+			checkCudaErrors(cudaEventRecord(events[engidx], streams[engidx]));
+		}
+		else {
+			std::vector<float> ascend_unique_arr_local = (data_3D) ?
+				from_stream_3Dfloat_mt_slice_<float>(fileName, 8, input_host[engidx], imageH_, imageW_, imageD_, 0, imageD_ - 1, pad_by_one, timings[0]) :
+				from_stream_2Dfloat_mt_row_<float>(fileName, 8, input_host[engidx], imageH_, imageW_, 0, imageH_ - 1, pad_by_one, timings[0]);
+			binNum_local = int(ascend_unique_arr_local.size());
+			ascend_unique_arr_local_rec.push_back(ascend_unique_arr_local);
+			if (binNum_local > pre_binNum) std::cout << "WARNING: increase bin number or chunk number" << std::endl;
+			if (data_3D) { cudaMemcpy3DParms p = setup_3DCopy_params(tex_dataSrc_[engidx], input_host[engidx], imageH_, imageW_, chunkH, 0); checkCudaErrors(cudaMemcpy3D(&p)); }
+			else checkCudaErrors(cudaMemcpyToArray(tex_dataSrc_[engidx], 0, 0, &input_host[engidx][0], chunkH * imageW_ * sizeof(float), cudaMemcpyHostToDevice));
+			std::copy(ascend_unique_arr_local.begin(), ascend_unique_arr_local.end(), ascend_unique_arr_local_host_[engidx]);
+			checkCudaErrors(cudaMemcpy(ascend_unique_arr_local_device_[engidx], ascend_unique_arr_local_host_[engidx], binNum_local * sizeof(float), cudaMemcpyHostToDevice));
+			init_histogram_1D_<int>(VCEC_host_partial_[engidx], binNum_local);
+			checkCudaErrors(cudaMemcpy(VCEC_device_partial_[engidx], VCEC_host_partial_[engidx], binNum_local * sizeof(int), cudaMemcpyHostToDevice));
+			if (data_3D) computeECC_3D(imageH_ - 2, imageW_ - 2, chunkH - 2, binNum_local, texSrc_[engidx], VCEC_device_partial_[engidx], ascend_unique_arr_local_device_[engidx], i == (chunk_num - 1), nullptr);
+			else computeECC(chunkH - 2, imageW_ - 2, binNum_local, texSrc_[engidx], VCEC_device_partial_[engidx], ascend_unique_arr_local_device_[engidx], i == (chunk_num - 1), nullptr);
+			checkCudaErrors(cudaMemcpy(VCEC_host_partial_[engidx], VCEC_device_partial_[engidx], binNum_local * sizeof(int), cudaMemcpyDeviceToHost));
+			std::vector<int> VCEC_local_;
+			VCEC_local_.assign(VCEC_host_partial_[engidx], VCEC_host_partial_[engidx] + binNum_local);
+			VCEC_local_rec.push_back(VCEC_local_);
+		}
+	}
+	// ------- Process results --------
+	if (async_mode) for (int i = chunk_num; i < chunk_num + engine_num; i++) {
+		checkCudaErrors(cudaEventSynchronize(events[i % engine_num]));
+		std::vector<int> VCEC_local_;
+		VCEC_local_.assign(VCEC_host_partial_[i % engine_num], VCEC_host_partial_[i % engine_num] + ascend_unique_arr_local_rec[i - engine_num].size());
+		VCEC_local_rec.push_back(VCEC_local_);
+	}
+
+	checkCudaErrors(cudaDeviceSynchronize());
+	double w2 = get_wall_time();
+	timings[1] = (w2 * 1000 - w1 * 1000);
+	if (output) {
+		std::vector<std::string> fileNameso = compose_outfileNames_from_folder(path, patho);
+		for (unsigned int i = 0; i < fileNameso.size(); i++) write_txt_ECC<float>(fileNameso[i], ascend_unique_arr_local_rec[i], &VCEC_local_rec[i][0]);
+	}
+	if (manual_timing) {
+		printf("Data read time: %f msecs;\n", timings[0]);
+		printf("GPU total time: %f msecs;\n", timings[1]);
+	}
+
+	// ------- Free memory --------
+	section.clear();
+	free_vector2D_<float>(ascend_unique_arr_local_rec);
+	(async_mode) ? cudaFreeHost(input_host) : free(input_host);
+	(async_mode) ? free_host_memory2D_pinned_<float>(input_host, engine_num) : free_host_memory2D_<float>(input_host, engine_num);
+	(async_mode) ? free_host_memory2D_pinned_<int>(VCEC_host_partial_, engine_num) : free_host_memory2D_<int>(VCEC_host_partial_, engine_num);
+	(async_mode) ? free_host_memory2D_pinned_<float>(ascend_unique_arr_local_host_, engine_num) : free_host_memory2D_<float>(ascend_unique_arr_local_host_, engine_num);
+
+	free_device_memory2D_<int>(VCEC_device_partial_, engine_num);
+	free_cudaArray_array(tex_dataSrc_, engine_num);
+	free_device_memory2D_<float>(ascend_unique_arr_local_device_, engine_num);
+	if (async_mode) free_cudaEvent_array(events, engine_num * 3);
+	if (async_mode) free_cudaStream_array(streams, engine_num);
+
+	checkCudaErrors(cudaDeviceReset());
+	return timings;
+}
 
 std::vector<double> ECC_vanila(std::string& fileName, int h, int w, bool mt, bool timing, bool verb) {
 	int imageH_          = h;

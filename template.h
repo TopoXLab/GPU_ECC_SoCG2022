@@ -797,8 +797,10 @@ std::vector<float> from_stream_2Dfloat_mt_row_(
 	ctpl::thread_pool tp(num_threads);
 
 	bool slice_l_changed = false, slice_r_changed = false;
-	if (expand_by_one && slice_l == 0) { dummy2D_thread_(data, 0, 0, w); slice_l++; slice_l_changed = true; }
-	if (expand_by_one && slice_r == h + 1) { dummy2D_thread_(data, slice_l, slice_r, w); slice_r--; slice_r_changed = true; }
+	if (expand_by_one && slice_l == 0) { dummy2D_thread_(data, 0, 0, w); slice_l_changed = true; }
+	if (expand_by_one && slice_r == h + 1) { dummy2D_thread_(data, slice_l, slice_r, w); slice_r_changed = true; }
+	if (expand_by_one && slice_l == 0) slice_l++;
+	if (expand_by_one && slice_r == h + 1) slice_r--;
 	int start, end;
 	std::vector<std::pair<int, int>> sec_;
 	core_num = (core_num > slice_r - slice_l + 1) ? slice_r - slice_l + 1 : core_num;

@@ -25,11 +25,14 @@ int main(int argc, char **argv)
 	int imageD_			 = std::atoi(argv[6]);
 	std::vector<std::string> args;
 	args.assign(argv + 1, argv + 4);
-	if (args[0] == "b")
-		std::vector<double> time = ECC_folder(args[1], args[2], imageH_, imageW_, imageD_, pad_by_one, async_mode, mt_read, manual_timing, verbose, output);
+	if (args[0] == "b1")
+		std::vector<double> time = ECC_folder_sequential(args[1], args[2], imageH_, imageW_, imageD_, pad_by_one, async_mode, mt_read, manual_timing, verbose, output);
+	else if (args[0] == "b2")
+		std::vector<double> time = ECC_folder_multiple(args[1], args[2], imageH_, imageW_, imageD_, pad_by_one, async_mode, mt_read, manual_timing, verbose, output);
 	else if (args[0] == "s")
 		std::vector<double> time = ECC_(args[1], args[2], imageH_, imageW_, imageD_, pad_by_one, async_mode, mt_read, manual_timing, verbose, output);
 	else helper_();
+
 
 	//// Note: some data is not in float format, like planck data. Need to change the input data type to uint8_t!
 	//// ------ Read/Generate input data
@@ -42,8 +45,8 @@ int main(int argc, char **argv)
 	//std::string fileName6 = "E:/Data2/SoCG2022/GaussRandomField/2D/2D_128_0.dat";
 	//std::string fileName7 = "E:/Data2/SoCG2022/Repeated_Gaussian/2D_1024_11.dat";
 
-	//std::string path1 = "E:/WorkBench/ECC_v1.0/ECC_v1.0/TopoXLab_Github/GPU_ECC_SoCG2022/GaussRandomField/2D/2D_128_4.dat";
-	//std::string outpath = "E:/WorkBench/ECC_v1.0/ECC_v1.0/TopoXLab_Github/GPU_ECC_SoCG2022/GaussRandomField/4.txt";
+	//std::string path1 = "E:/WorkBench/ECC_v1.0/ECC_v1.0/TopoXLab_Github/GPU_ECC_SoCG2022/GaussRandomField/2D";
+	//std::string outpath = "E:/WorkBench/ECC_v1.0/ECC_v1.0/TopoXLab_Github/GPU_ECC_SoCG2022/GaussRandomField";
 
 	//int imageH_        = 128;
 	//int imageW_        = 128;
@@ -63,8 +66,9 @@ int main(int argc, char **argv)
 	////float* input_host = from_random_3D_<float>(imageH_, imageW_, imageD_, 256, 0.2);
 	////write_stream_<float, float>(fileName, input_host, imageH_* imageW_* imageD_);
 
-	//std::vector<double> time = ECC_(path1, outpath, imageH_, imageW_, imageD_, pad_by_one, async_mode, mt_read, manual_timing, verbose, output);
-	////std::vector<double> time = ECC_folder(path1, outpath, imageH_, imageW_, imageD_, pad_by_one, async_mode, mt_read, manual_timing, verbose, output);
+	////std::vector<double> time = ECC_(path1, outpath, imageH_, imageW_, imageD_, pad_by_one, async_mode, mt_read, manual_timing, verbose, output);
+	////std::vector<double> time = ECC_folder_sequential(path1, outpath, imageH_, imageW_, imageD_, pad_by_one, async_mode, mt_read, manual_timing, verbose, output);
+	//std::vector<double> time = ECC_folder_multiple(path1, outpath, imageH_, imageW_, imageD_, pad_by_one, async_mode, mt_read, manual_timing, verbose, output);
 	////std::vector<double> time = ECC_vanila(fileName7, imageH_, imageW_, mt_read, manual_timing, verbose);
 	////run_folder(fileName1, 10);
 	////run_GENERAL(fileName3, 2, 10);

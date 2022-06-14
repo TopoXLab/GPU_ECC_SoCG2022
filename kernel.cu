@@ -241,8 +241,12 @@ __global__ void ECC_kernel_v30(
         atomicAdd(&hist_local_[binary_search(&hist_local_[binNum], binNum, c)], change);
     }
     __syncthreads();
-    if (blockDim.x * threadIdx.y + threadIdx.x < binNum)
-        atomicAdd(&VCEC_device[blockDim.x * threadIdx.y + threadIdx.x], (int)hist_local_[blockDim.x * threadIdx.y + threadIdx.x]);
+
+    block_pos = blockDim.x * threadIdx.y + threadIdx.x;
+    while (block_pos < binNum) {
+        atomicAdd(&VCEC_device[block_pos], (int)hist_local_[block_pos]);
+        block_pos = block_pos + blockDim.x * blockDim.y;
+    } 
 }
 
 __global__ void ECC_kernel_3D(

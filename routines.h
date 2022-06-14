@@ -17,7 +17,19 @@ std::vector<double> ECC_(
 	bool output
 );
 
-std::vector<double> ECC_folder(
+std::vector<double> ECC_folder_sequential(
+	std::string& path,
+	std::string& patho,
+	int h, int w, int d,
+	bool pad,
+	bool async,
+	bool mt,
+	bool timing,
+	bool verb,
+	bool output
+);
+
+std::vector<double> ECC_folder_multiple(
 	std::string& path,
 	std::string& patho,
 	int h, int w, int d,
