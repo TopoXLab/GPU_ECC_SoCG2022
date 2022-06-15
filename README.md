@@ -91,23 +91,23 @@ After compilation, the library we need is located under boost_1_77_0/build/x64/b
 This [page](https://levelup.gitconnected.com/the-definite-guide-on-compiling-and-linking-boost-c-libraries-for-visual-studio-projects-c79464d7282d) provides detailed instructions for compling boost under Windows.
 
 ### Citation ###
-@inproceedings{DBLP:conf/compgeom/0010W022,
-  author    = {Fan Wang and
-               Hubert Wagner and
-               Chao Chen},
-  editor    = {Xavier Goaoc and
-               Michael Kerber},
-  title     = {{GPU} Computation of the Euler Characteristic Curve for Imaging Data},
-  booktitle = {38th International Symposium on Computational Geometry, SoCG 2022,
-               June 7-10, 2022, Berlin, Germany},
-  series    = {LIPIcs},
-  volume    = {224},
-  pages     = {64:1--64:16},
-  publisher = {Schloss Dagstuhl - Leibniz-Zentrum f{\"{u}}r Informatik},
-  year      = {2022},
-  url       = {https://doi.org/10.4230/LIPIcs.SoCG.2022.64},
-  doi       = {10.4230/LIPIcs.SoCG.2022.64},
-  timestamp = {Wed, 01 Jun 2022 17:01:01 +0200},
-  biburl    = {https://dblp.org/rec/conf/compgeom/0010W022.bib},
-  bibsource = {dblp computer science bibliography, https://dblp.org}
+    @inproceedings{DBLP:conf/compgeom/0010W022,
+      author    = {Fan Wang and
+                   Hubert Wagner and
+                   Chao Chen},
+      editor    = {Xavier Goaoc and
+                   Michael Kerber},
+      title     = {{GPU} Computation of the Euler Characteristic Curve for Imaging Data},
+      booktitle = {38th International Symposium on Computational Geometry, SoCG 2022,
+                   June 7-10, 2022, Berlin, Germany},
+      series    = {LIPIcs},
+      volume    = {224},
+      pages     = {64:1--64:16},
+      publisher = {Schloss Dagstuhl - Leibniz-Zentrum f{\"{u}}r Informatik},
+      year      = {2022},
+      url       = {https://doi.org/10.4230/LIPIcs.SoCG.2022.64},
+      doi       = {10.4230/LIPIcs.SoCG.2022.64},
+      timestamp = {Wed, 01 Jun 2022 17:01:01 +0200},
+      biburl    = {https://dblp.org/rec/conf/compgeom/0010W022.bib},
+      bibsource = {dblp computer science bibliography, https://dblp.org}
 }
