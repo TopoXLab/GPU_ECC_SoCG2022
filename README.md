@@ -90,7 +90,7 @@ Download boost_1.77.0.zip and unzip it. Run following commands under root folder
 After compilation, the library we need is located under boost_1_77_0/build/x64/boost/bin.v2/libs/filesystem/build/msvc-14.2/release/link-static/runtime-link-static/threading-multi/libboost_filesystem-vc142-mt-s-x64-1_77.lib <br/>
 This [page](https://levelup.gitconnected.com/the-definite-guide-on-compiling-and-linking-boost-c-libraries-for-visual-studio-projects-c79464d7282d) provides detailed instructions for compling boost under Windows.
 
-### Citation ###
+## Citation ##
     @inproceedings{DBLP:conf/compgeom/0010W022,
       author    = {Fan Wang and
                    Hubert Wagner and
