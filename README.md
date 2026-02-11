@@ -5,7 +5,7 @@ Authors: Fan Wang, Hubert Wagner, Chao Chen <br/>
 # 🚨 IMPORTANT UPDATE - 02/16/2026 🚨
 
 ## ☑️ GPU-ECC is now **cross-platform** (Linux & Windows)
-## ⚡ Requires **CUDA ≥ 12.6** to compile and run
+## ⚡ Requires only **CUDA ≥ 12.6** to compile and run
 
 ### 📦 Available now as:
 - **pip-installable Python extension**
