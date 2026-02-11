@@ -1,7 +1,14 @@
-# GPU ECC
+# GPU-ECC: GPU-Computation-of-the-Euler-Characteristic-Curve-for-Imaging-Data
+CUDA-accelerated computation of Euler Characteristic Curves.
 Authors: Fan Wang, Hubert Wagner, Chao Chen <br/>
-Maintainer: Fan Wang <br/>
-Paper: [GPU Computation of the Euler Characteristic Curve for Imaging Data](https://arxiv.org/pdf/2203.09087.pdf)
+
+> <p style="color:red; font-size:1.15em;">
+> <b>GPU-ECC is now cross-platform (Linux and Windows) and requires only CUDA &gt;= 12.6 to compile and run.</b><br/>
+> <b>GPU-ECC is now available as a pip-installable Python extension and as Docker images.</b><br/><br/>
+> <b>For more information and detailed instructions, please visit the new page:</b><br/>
+> <b><a href="https://github.com/seravee08/GPU-ECC-GPU-Computation-of-the-Euler-Characteristic-Curve-for-Imaging-Data">https://github.com/seravee08/GPU-ECC-GPU-Computation-of-the-Euler-Characteristic-Curve-for-Imaging-Data</a></b>
+> </p>
+
 
 ## Introduction ##
 GPU ECC is an optimized GPU implementation of the Euler Characteristic Curve computation for 2D and 3D grayscale images.
