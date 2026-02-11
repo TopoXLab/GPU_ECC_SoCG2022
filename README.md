@@ -11,5 +11,5 @@ Authors: Fan Wang, Hubert Wagner, Chao Chen <br/>
 - **pip-installable Python extension**
 - **Docker images**
 
-### 🔗 New project page (full instructions)
+# 🔗 New project page (full instructions)
 **https://github.com/seravee08/GPU-ECC-GPU-Computation-of-the-Euler-Characteristic-Curve-for-Imaging-Data**
