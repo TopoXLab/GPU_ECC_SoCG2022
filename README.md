@@ -2,7 +2,7 @@
 CUDA-accelerated computation of Euler Characteristic Curves.<br/>
 Authors: Fan Wang, Hubert Wagner, Chao Chen <br/>
 
-# 🚨 IMPORTANT UPDATE 🚨
+# 🚨 IMPORTANT UPDATE - 02/16/2026 🚨
 
 > ## ✅ GPU-ECC is now **cross-platform** (Linux & Windows)
 > ## ⚡ Requires **CUDA ≥ 12.6** to compile and run
